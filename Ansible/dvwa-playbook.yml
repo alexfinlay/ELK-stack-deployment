@@ -1,0 +1,33 @@
+---
+  - name: Install DVWA
+    hosts: webservers
+    become: true
+    tasks:
+
+    - name: Install Docker.io
+      apt:
+        update_cache: yes
+        name: docker.io
+        state: present
+
+    - name: Install Pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install docker
+      pip:
+        name: docker
+
+    - name: Install the cybersecurty/dvwa container
+      docker_container:
+        name: dvwa
+        image: cyberxsecurity/dvwa
+        state: started
+        restart_policy: always
+        published_ports: 80:80
+
+    - name: Start docker
+      ansible.builtin.systemd:
+        name: docker
+        enabled: yes
