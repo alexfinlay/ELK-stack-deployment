@@ -22,7 +22,7 @@
           name: docker
           state: present
 
-      - name: Increate Virtual Mem
+      - name: Increase Virtual Mem
         command: sysctl -w vm.max_map_count=262144
 
       - name: Use more mem
