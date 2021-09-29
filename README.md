@@ -107,12 +107,14 @@ SSH into the control node and follow the steps below:
 - Copy elk-playbook.yml, filebeat-playbook.yml, and metricbeat-playbook.yml files to /etc/ansible/.
 - Copy filebeat-config.yml and metricbeat-config.yml to /etc/ansible/files/.
 - Update the /etc/ansible/hosts file to include the elk vm and all hosts metricbeat and filebeat should be installed on (webservers in the example)
-`[webservers]
+```
+[webservers]
 10.0.0.5 ansible_python_interpreter=/usr/bin/python3
 10.0.0.6 ansible_python_interpreter=/usr/bin/python3
 10.0.0.7 ansible_python_interpreter=/usr/bin/python3 
 [elk]
-10.1.0.4 ansible_python_interpreter=/usr/bin/python3`
+10.1.0.4 ansible_python_interpreter=/usr/bin/python3
+```
 - Run the elk playbook, and navigate to http://[your.ELK-VM.External.IP]:5601/app/kibana to check that the installation worked as expected.
 - Finally run the filebeat and metricbeat playbooks, and navigate to the site above and check for beat data.
 
@@ -120,14 +122,18 @@ SSH into the control node and follow the steps below:
 **Bonus: Commands**
 To obtain the playbook(s) and update the files are required, do the following:
 1. Install git and clone the repository (alternately you can manually download)
-`apt-get update && apt-get install git
-git clone https://github.com/alexfinlay/bootcamp-project1.git`
+```
+apt-get update && apt-get install git
+git clone https://github.com/alexfinlay/bootcamp-project1.git
+```
 1. Copy the files to the appropriate directories
-`cp elk-playbook.yml /etc/ansible/`
-`cp filebeat-playbook.yml /etc/ansible/`
-`cp metricbeat-playbook.yml /etc/ansible/`
-`cp filebeat-config.yml /etc/ansible/files`
-`cp elk-playbook.yml /etc/ansible/`
+```
+cp elk-playbook.yml /etc/ansible/
+cp filebeat-playbook.yml /etc/ansible/
+cp metricbeat-playbook.yml /etc/ansible/
+cp filebeat-config.yml /etc/ansible/files
+cp elk-playbook.yml /etc/ansible/
+```
 1. Update the ansible hosts file and add the applicable hosts
 `vi /etc/ansible/hosts`
 1. Edit the filebeat-config.yml and metricbeat-config.yml files and set the IP address of your ELK server in the following locations:
