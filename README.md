@@ -1,8 +1,10 @@
+README
+
 ## Automated ELK Stack Deployment
 
 The files in this repository were used to configure the network depicted below.
 
-![Network Diagram](Diagrams/diagram_filename.png)
+![Network Diagram](diagrams/elk_diagram.png)
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the filebeat-playbook.yml and metricbeat-playbook.yml files may be used to install only certain pieces of it, such as Filebeat.
 
@@ -74,15 +76,15 @@ Ansible was used to automate configuration of the ELK machine. No configuration 
 
 The playbook implements the following tasks:
 - Install Docker
-- Install Pip
-- Install Pip Docker module
+- Install the Python Package Manager - Pip
+- Install the Pip Docker module
 - Increase virtual memory
 - Download the ELK Docker container and launch it
 - Enable Docker on boot
 
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
-![docker ps output](Images/docker_ps_output.png)
+![docker ps output](Images/docker_ps_output.PNG)
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
@@ -95,23 +97,55 @@ We have installed the following Beats on these machines:
 - Metricbeat
 
 These Beats allow us to collect the following information from each machine:
-- _TODO: In 1-2 sentences, explain what kind of data each beat collects, and provide 1 example of what you expect to see. E.g., `Winlogbeat` collects Windows logs, which we use to track user logon events, etc._
+- Filebeat: collects changes to various files and system logs such as `/var/logs/syslog`.
+- Metricbeat: collects system metrics such as CPU utlization.
 
-### Using the Playbook
-In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
+### Using the Playbooks
+In order to use the playbooks, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the _____ file to _____.
-- Update the _____ file to include...
-- Run the playbook, and navigate to ____ to check that the installation worked as expected.
+- Copy elk-playbook.yml, filebeat-playbook.yml, and metricbeat-playbook.yml files to /etc/ansible/.
+- Copy filebeat-config.yml and metricbeat-config.yml to /etc/ansible/files/.
+- Update the /etc/ansible/hosts file to include the elk vm and all hosts metricbeat and filebeat should be installed on (webservers in the example)
+`[webservers]
+10.0.0.5 ansible_python_interpreter=/usr/bin/python3
+10.0.0.6 ansible_python_interpreter=/usr/bin/python3
+10.0.0.7 ansible_python_interpreter=/usr/bin/python3 
+[elk]
+10.1.0.4 ansible_python_interpreter=/usr/bin/python3`
+- Run the elk playbook, and navigate to http://[your.ELK-VM.External.IP]:5601/app/kibana to check that the installation worked as expected.
+- Finally run the filebeat and metricbeat playbooks, and navigate to the site above and check for beat data.
 
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
+* * *
+**Bonus: Commands**
+To obtain the playbook(s) and update the files are required, do the following:
+1. Install git and clone the repository (alternately you can manually download)
+`apt-get update && apt-get install git
+git clone https://github.com/alexfinlay/bootcamp-project1.git`
+1. Copy the files to the appropriate directories
+`cp elk-playbook.yml /etc/ansible/`
+`cp filebeat-playbook.yml /etc/ansible/`
+`cp metricbeat-playbook.yml /etc/ansible/`
+`cp filebeat-config.yml /etc/ansible/files`
+`cp elk-playbook.yml /etc/ansible/`
+1. Update the ansible hosts file and add the applicable hosts
+`vi /etc/ansible/hosts`
+1. Edit the filebeat-config.yml and metricbeat-config.yml files and set the IP address of your ELK server in the following locations:
 
-_As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
+- Filebeat line #1106
+- Filebeat line #1806
+`vi /etc/ansible/files/filebeat-config.yml`
 
-
+- Metricbeat line #62
+- Metricbeat line #95
+`vi /etc/ansible/files/metricbeat-config.yml`
+1. Run the ELK playbook
+`ansible-playbook /etc/ansible/elk-playbook.yml`
+1. Browse to the Kibana site and confirm it's up and running.  http://[your.ELK-VM.External.IP]:5601/app/kibana
+1. Run the filebeat playbook
+`ansible-playbook /etc/ansible/elk-playbook.yml`
+1. Run the metricbeat playbook
+`ansible-playbook /etc/ansible/metricbeat-playbook.yml`
+* * *
 ------------------------------------------------------------------
 ## Interview Questions
